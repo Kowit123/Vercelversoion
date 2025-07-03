@@ -994,6 +994,28 @@ doc.text(text4_1, centerX-0.3, yy, { align: 'center' });
 yy += 0.7;
 
 
+//คนขับรถ
+if(reignBox.style.display != "none"){
+doc.addPage('a4', 'landscape');
+
+let yc = 3;
+doc.setFontSize(24);
+doc.setFont('THSarabunNew-bold');
+doc.text(`หลักฐานการจ่ายเงินค่าตอบแทนการปฏิบัติงานในการขับรถไปราชการ`,pageWidth2/2,yc,{align: 'center'});
+yc += 0.7;
+doc.setFontSize(16);
+doc.setFont('THSarabunNew-normal');
+doc.text(`สำหรับ  (  ) รถบัส  (  ) รถมินิบัส  (  ) รถตู้และรถอื่นๆ  (  ) กรณีรับส่งผู้โดยสารสนามบิน`,pageWidth2/2,yc,{align: 'center'});
+
+
+
+
+
+
+
+}
+
+
 
 
 
