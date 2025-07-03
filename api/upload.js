@@ -1,3 +1,6 @@
+import fs from 'fs';
+import path from 'path';
+
 export default async function handler(req, res) {
   // Handle CORS
   res.setHeader('Access-Control-Allow-Origin', '*');
@@ -54,9 +57,17 @@ export default async function handler(req, res) {
       .replace(/[^a-zA-Z0-9.-]/g, '');
     const newFilename = `${timestamp}-${safeName}`;
 
-    // Convert file to base64 for storage
-    const base64Data = fileData.data.toString('base64');
+    // Ensure uploads directory exists
+    const uploadsDir = path.join(process.cwd(), 'public', 'uploads');
+    if (!fs.existsSync(uploadsDir)) {
+      fs.mkdirSync(uploadsDir, { recursive: true });
+    }
 
+    // Save file to uploads directory
+    const filePath = path.join(uploadsDir, newFilename);
+    fs.writeFileSync(filePath, fileData.data);
+
+    // Prepare metadata
     const newEntry = {
       id: timestamp.toString(),
       title,
@@ -64,16 +75,28 @@ export default async function handler(req, res) {
       filename: newFilename,
       originalName,
       uploadedAt: new Date().toISOString(),
-      fileData: base64Data, // Store file as base64
       fileSize: fileData.data.length
     };
 
-    // In a real application, you would store this in a database
-    // For now, we'll return the data to the client to store
+    // Save metadata to data.json
+    const dataJsonPath = path.join(process.cwd(), 'public', 'data.json');
+    let entries = [];
+    if (fs.existsSync(dataJsonPath)) {
+      try {
+        const fileContent = fs.readFileSync(dataJsonPath, 'utf-8');
+        entries = JSON.parse(fileContent);
+      } catch (e) {
+        entries = [];
+      }
+    }
+    entries.push(newEntry);
+    fs.writeFileSync(dataJsonPath, JSON.stringify(entries, null, 2));
+
+    // Respond with metadata only
     return res.json({ 
       message: 'Upload successful', 
       entry: newEntry,
-      note: 'File data returned as base64. Store this data in your preferred storage solution.'
+      note: 'File saved to uploads folder. Metadata saved to data.json.'
     });
 
   } catch (error) {
