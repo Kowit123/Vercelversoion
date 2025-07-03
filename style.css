@@ -1,0 +1,576 @@
+*{
+    font-size: large;
+    margin: 0;
+    padding: 0;
+    line-height: 1.6;
+    font-weight: bold;
+}
+
+/* ป้องกันการรีเฟรชจาก CSS animations */
+* {
+    animation-fill-mode: forwards;
+    animation-play-state: running;
+}
+
+/* ป้องกันการรีเฟรชจาก transitions */
+* {
+    transition: none !important;
+}
+
+/* ป้องกันการรีเฟรชจาก hover effects */
+*:hover {
+    transition: none !important;
+}
+
+body {
+    font-family: 'Noto Sans Thai', sans-serif;
+    background-color: #dfbe03;
+
+    input {
+        padding: 0.3rem;
+        border: 1px solid #585858;
+        border-radius: 8px;
+        margin-bottom: 1rem;
+        font-weight: normal;
+    }
+
+        .navbar {
+            background-color: #b18500;
+            display: flex;
+            align-items: center;
+            padding: 0px;
+        }
+
+        .navbar a {
+            text-decoration: none;
+            color: #fff7c7;
+            font-weight: bold;
+            font-size: 18px;
+            padding: 20px 16px;
+            transition: background-color 0.3s, color 0.3s;
+            cursor: pointer;
+            border-right: 1px solid rgb(244, 236, 137);
+        }
+
+        /* ตัวแรกไม่มีเส้นกั้น */
+        .navbar a:first-child {
+            border-left: none;
+        }
+        .navbar a:hover {
+            background-color: #fff7c7;
+            color: #292929;
+        }
+
+
+    label {
+        display: block;
+        font-weight: bold;
+    }
+
+    button {
+        padding: 0.3rem 1.2rem;
+        border: none;
+        border-radius: 6px;
+        background-color: #007bff;
+        color: white;
+        font-size: 1rem;
+        cursor: pointer;
+        margin-top: 1rem;
+    }
+
+    button:hover {
+        background-color: #0056b3;
+    }
+
+}
+/*top_tag*/
+h1 {
+    text-align: center;
+    margin-bottom: 2rem;
+    font-size: 2rem;
+    color: #333;
+}
+/* main_form */
+#container, #container2 {
+    max-width: 1000px;
+    margin: auto;
+    background-color: hsl(0, 0%, 99%);
+    padding: 1.75rem 3rem 3rem 3rem;
+    border-radius: 12px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+.draft_form {
+    /* firtst_part*/
+    .agency_part, .About_the_project {
+        input {
+            width: 98.8%;
+        }
+    }
+
+    .bookNum_date {
+        display: flex;
+        justify-content: space-between;
+        width: 98.8%;
+        .Book_number {
+            width:49%;
+            input {
+                width: 100%;
+            }
+        }
+        .date_1 {
+            width:49%;
+            input {
+                width: 100%;
+            }
+        }
+    }
+
+    .subject {
+        input {
+            width: 98.8%;
+        }
+    }
+
+    .dear_requesting {
+        display: flex;
+
+        .Dear {
+            width:48%;
+            input {
+                width: 100%;
+            }
+        }
+    }
+    .wRequesting {
+        padding: 0;
+        width: 100%;
+        div {
+            width: 100%;
+            display: flex;
+            justify-content: space-between;
+        }
+        input {
+            width: 30%;
+        }
+
+    }
+
+    .header-row, .entry12{
+        display: flex;
+        justify-content: space-between;
+        input {
+            width: 29%;
+        }
+    }
+    /* .header-row, .entry {
+        display: grid;
+        grid-template-columns: 1fr 1fr 1fr auto;
+        gap: 10px;
+        margin-bottom: 10px;
+        align-items: center;
+        width: 100%;
+
+        button {
+
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+        }
+        .add-btn {
+            background-color: #0004ff;
+            color: white;
+            margin: 0;
+        }
+        .remove-btn {
+            background-color: #ff3512;
+            color: white;
+            margin: 0;
+        }        
+        input {
+            width: 95%;
+            margin: 0;
+        }
+    }
+    .form-container {
+        width: 96%;
+    }
+
+    .header-row {
+        width: 89%;
+    } */
+
+    .YDUGO {
+    margin-top: 2rem;
+    p {
+        font-weight: bold;
+        display: block;
+        margin-bottom: 0.5rem;
+    }
+    #List {
+        display: flex;
+        margin-bottom: 1rem;
+        label {
+            font-weight: normal;
+        }
+        div {
+            margin-right: 3rem;
+            label {
+                display: inline;
+            }
+        }
+
+    }
+    }
+
+    .location {
+        display: flex;
+        width: 100%;
+        .at {
+            width:98.8%;
+            input {
+                width: 100%;
+            }
+        }
+    }
+    
+        .in-date_1, .dateTogo {
+            display: flex;
+            justify-content: space-between;
+            width: 98.8%;
+            .u10d1, .in-date_2, .dateTogo_1, .dateTogo_2{
+                width: 49%;
+            }
+            input{
+                margin: 0;
+                width: 100%;
+            }
+
+        }
+
+}
+/*separate_line*/
+hr.solid {
+  border-top: 3px solid #bbb;
+  margin: 1.5%;
+}
+
+/*ค่าเบี้ยเลี้ยง*/
+.allowance {
+    .idd {
+        display: flex;
+    .f2_1 {
+        display: flex;
+        width: 79%;
+        margin: 0;
+        padding: 0;
+        
+        input {
+            width: 30%;
+            margin: 0.2rem;
+        }
+    }
+    .tatal-cost_allowance {
+        width: 25%;
+        display: flex;
+        margin: 0.2rem 0;
+        margin-left: 10%;
+        p {
+            display: inline;
+        }
+    }
+    }
+}
+/*accommodation*/
+.accommodation {
+    display: block;
+    margin-top: 2%;
+    label {
+        display: block;
+    }
+    .all {
+        display: flex;
+        margin: 0;
+    }
+    .detail_cost {
+        display: grid;
+        grid-template-columns: 25% 25% 25% 10%;
+        gap: 9px;
+        margin-bottom: 10px;
+        align-items: center;
+        width: 68.7%;
+        margin-right: 7%;
+        input {
+            margin: 0;
+            width: 94%;
+        }
+    }
+    .add-btn {
+        background-color: #0004ff;
+        color: white;
+        margin: 0;
+        margin-left: 10%;
+    }
+    .remove-btn {
+        background-color: #ff3512;
+        color: white;
+        margin: 0;
+        margin-left: 10%;
+    }
+    .tatal-cost_accommodation {
+        display: flex;
+        margin: 0.2rem 0;
+        margin-left: 2.4%;
+        p {
+            display: inline;
+        }
+    }   
+}
+
+/*transportation*/
+.Transportation_expenses {
+margin-top: 1rem;
+p {
+    font-weight: bold;
+    display: block;
+    margin-bottom: 0.5rem;
+}
+.Transportation-expenses_List {
+    display: flex;
+    margin-bottom: 1rem;
+    label {
+        font-weight: normal;
+    }
+    div {
+        margin-right: 3rem;
+        label {
+            display: inline;
+        }
+    }
+
+}
+}
+.distance-cost {
+    display: flex;
+    .distance {
+        display: flex;
+        width: 76%;
+        margin-right: 0;
+        input {
+            margin: 0;
+            width: 45%;
+        }
+
+    }
+    .tatal-cost_distance {
+        display: flex;
+        margin-left: 3%;
+    }
+}
+
+.detail_car {
+    display: grid;
+    grid-template-columns: 25% 37% ;
+    gap: 9px;
+    margin-bottom: 1rem;
+    align-items: center;
+    margin-right: 16%;
+    input {
+        margin: 0;
+        width: 95%;
+    }
+}
+
+.hired_vehicles {
+    margin-top: 2rem;
+    .F_line {
+    display: grid;
+    grid-template-columns: 79% 40% ;
+    gap: 9px;
+    margin-bottom: 0.25rem;
+    align-items: center;
+    margin-right: 16%;
+    }
+    div {
+        display: flex;
+    }
+
+    .Hired-vehicles_detail {
+    .add-btn {
+        background-color: #0004ff;
+        color: white;
+        margin: 0;
+        margin-left: 10%;
+    }
+    .remove-btn {
+        background-color: #ff3512;
+        color: white;
+        margin: 0;
+        margin-left: 10%;
+    }        
+    }
+}
+
+/*ค่าลงทะเบียน*/
+.Registration {
+    margin-top: 1rem;
+    .F_line-Registration {
+    display: grid;
+    grid-template-columns: 79% 40% ;
+    gap: 9px;
+    margin-bottom: 0.25rem;
+    align-items: center;
+    margin-right: 16%;
+    }
+    div {
+        display: flex;
+    }
+
+    .Registration_fee_detail {
+    .add-btn {
+        background-color: #0004ff;
+        color: white;
+        margin: 0;
+        margin-left: 10%;
+    }
+    .remove-btn {
+        background-color: #ff3512;
+        color: white;
+        margin: 0;
+        margin-left: 10%;
+    }        
+    }
+}
+
+/*ค่าใช้จ่ายอื่นๆ*/
+.other-cost {
+    margin-top: 1rem;
+    .F_line-other {
+    display: grid;
+    grid-template-columns: 79% 40% ;
+    gap: 9px;
+    margin-bottom: 0.25rem;
+    align-items: center;
+    margin-right: 16%;
+    }
+    div {
+        display: flex;
+    }
+
+    .other-cost_detail {
+    .add-btn {
+        background-color: #0004ff;
+        color: white;
+        margin: 0;
+        margin-left: 10%;
+    }
+    .remove-btn {
+        background-color: #ff3512;
+        color: white;
+        margin: 0;
+        margin-left: 10%;
+    }        
+    }
+}
+
+
+#bttd {
+    max-width: 1000px;
+    margin: auto;
+    justify-content: center;
+    align-items: center;
+    margin: 2%;
+    margin-bottom: 4rem;
+}
+
+#bttd1 {
+    max-width: 1000px;
+    margin: auto;
+    justify-content: center;
+    align-items: center;
+    margin: 2%;
+    margin-bottom: 4rem;   
+}
+
+/* .pdfbtt, .pdfbtt1 {
+    margin: 0; /* ให้ปุ่มอยู่กลาง flex container */
+    /* position: absolute;
+    margin-bottom: 2%;
+   
+} */ 
+
+
+.n_display {
+    display: none;
+}
+
+.contac_Num {
+    display: flex;
+    .con_number {
+        margin-right: 1.5%;
+        width:60%;
+        input {
+            width: 100%;
+        }
+    }
+    .date_6 {
+        width:60%;
+        margin-left: 1.5%;
+        input {
+            width: 100%;
+        }
+    }
+}
+
+.topic_re, .subject_re{
+    input {
+        width: 100%;
+    }
+}
+
+.dear_re {
+    input {
+        width: 48%;
+    }
+}
+
+.wrq_re, .re{
+    input{
+        width: 100%;
+    }
+}
+
+.t_re_cost {
+    display: flex;
+    div {
+        text-align: center;
+        padding: 1%;
+        padding-top: 3%;
+        font-size: 16px;
+    p{
+        font-size: 14px;
+        display: block;
+    }
+    input{
+        margin-bottom: 0;
+    }
+    }
+}
+
+input[type="radio"] {
+  all: revert;
+}
+
+.gwd_re {
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+}
+
+.a12 {
+     display: flex;
+     justify-content: space-between;
+    input{
+        margin-bottom: 0;
+    }
+}

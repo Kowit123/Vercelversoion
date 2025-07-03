@@ -1,0 +1,834 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="allowanceStyle.css">
+    <link rel="stylesheet" href="styleFolder/allowanceStyle.css?v=1">
+    <!--date_format-->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+    <!--th_font-->
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Thai&display=swap" rel="stylesheet">
+    <!--jsPDF-->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.28/jspdf.plugin.autotable.min.js"></script>
+    <!--docx library-->
+    <script src="https://unpkg.com/docx@8.2.3/build/index.js"></script>
+    <!--font_in_jsPDF-->
+    <script src="./font/THSarabunNew-normal.js"></script>
+    <script src="./font/THSarabunNew-bold.js"></script>
+    <!--flastpicker-->
+    <script src="https://cdn.jsdelivr.net/npm/flatpickr/dist/l10n/th.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+    <script src="https://cdn.jsdelivr.net/npm/flatpickr/dist/l10n/th.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+    <!--web_name-->
+    <title>แบบฟอร์มขออนุมัตเดินทางไปราชการ</title>
+</head>
+<body>
+    <nav class="navbar">
+        <a href="#option1" onclick="switchForm(event)">แบบฟอร์มขออนุมัติเดินทางไปราชการ</a>
+        <a href="#option2" onclick="switchForm2(event)">แบบฟอร์มบันทึกรายงานการเดินทางไปราชการ</a>
+        <a href="./public/search.html" target="_blank">เอกสารที่อนุมัติแล้ว</a>
+        <a href="คู่มือการใช้งานเว็บไซต์.pdf" target="_blank">📄 คู่มือการใช้งาน</a>
+        <a href="https://docs.google.com/spreadsheets/d/1jmpD6H16JBT2EkhgW0D3YJOIQjH32OJZ/edit?fbclid=IwY2xjawLQOtdleHRuA2FlbQIxMABicmlkETF2TE1xUDRZOWVNNzJMSVVjAR4tN3XHCFrqLzkX794UVGTjiZiF2_YeExEKfE6F13WYxLhrMPcMObbpFqknLw_aem_zxwTXPTbt5F9uXohDIk78w&gid=762496308#gid=762496308" target="_blank">ตรวจสอบรายการค้างชำระ</a>
+        <a href="https://dohgis.doh.go.th/dohtotravel/" target="_blank">ระบบสารสนเทศการเดินทางกรมทางหลวง</a>
+    </nav>
+    <!--top_tag-->
+    <h1 style="margin-top: 3%;" id="h" >แบบฟอร์มขออนุมัติเดินทางไปราชการ</h1>
+    <!--main_form-->
+    <div id="container">
+        <!--Draft_form-->
+        <div class="draft_form">
+            <!--label-->
+            <h2 style="color: rgb(83, 83, 83); font-size: 1.5rem; margin: 0 0 1.2rem 0;">ร่างแบบฟอร์มขออนุมัติเดินทางไปราชการ</h2>
+            <!--first_part-->
+            <div class="agency_part">
+                <label for="agency">ส่วนราชการ:</label>
+                <input id="agency" type="text" placeholder="&nbsp;&nbsp;กรุณากรอกชื่อหน่วยงาน" value="คณะวิศวกรรมศาสตร์ มหาวิทยาลัยมหาสารคาม">
+            </div>
+            <div class="bookNum_date">
+                <div class="Book_number">
+                <label for="bookNum">เลขที่หนังสือ :</label>
+                <input id="bookNum" type="text" placeholder="&nbsp;&nbsp;กรุณากรอกเลขหนังสือ" value="อว.0605.14/............... ">
+                </div>
+                <div class="date_1">
+                <label for="thai-datepicker1">วันที่ :</label>
+                <input id="thai-datepicker1" type="text" placeholder="ว/ด/ปี">
+                </div>
+            </div>
+
+            <div class="subject">
+                <label for="topic">เรื่อง :</label>
+                <input id="topic" type="text" value="ขออนุมัติเดินทางไปราชการ" readonly>
+            </div>
+
+            <div class="dear_requesting">
+                <div class="Dear">
+                    <label for="dear">เรียน :</label>
+                    <input id="dear" type="text" value="คณบดีคณะวิศวกรรมศาสตร์">
+                </div>
+            </div>
+                <div class="wRequesting">
+                    <label for="requesting">ผู้ขออนุมัติ :</label>
+                    <div>
+                    <input id="requesting_name" type="text" placeholder="ชื่อ-นามสกุล">
+                    <input id="requesting_position" type="text" placeholder="ตำแหน่ง">
+                    <input id="requesting_part" type="text" placeholder="สังกัด">
+                    </div>
+                </div>
+
+            <!--secon_part-->
+            <!--go_with-->
+            <div class="copanain">
+            <label style="margin-bottom: 0.5rem;">ผู้ร่วมเดินทาง :</label>
+            <!-- หัวตาราง -->
+            <div class="header-row" style="margin-bottom: 0; margin-right: 20%; margin-left: 14%;">
+                <label>ชื่อ</label>
+                <label>ตำแหน่ง</label>
+                <label >สังกัด</label>
+            </div>
+            <div id="form-container" class="form-container">
+                <div class ="entry12">
+                <input type="text" name="name_1" id="name_1" placeholder="ชื่อ-นามสกุล">
+                <input type="text" name="position_1" id="position_1" placeholder="ตำแหน่ง">
+                <input type="text" name="department_1" id="department_1" placeholder="สังกัด">
+                <div>
+                <button class="add-btn" onclick="addEntry1()" style="margin: 0; background-color: blue;">&plus;</button>
+                </div>                
+                </div>
+
+            </div>
+            </div>
+            <!--YDUGO-->
+            <div class="YDUGO">
+                <p>เดินทางไปราชการเพื่อ :</p>
+                <div style="display: flex; margin-bottom: 2.5%;">
+                    <div style="display: flex;  margin-right: 3%;">
+                        <input type="radio" id="mao" name="qqe" value="เข้าร่วมประชุม" style="margin: 0;">
+                        <label for="mao" style="font-weight: normal;">เข้าร่วมประชุม</label>
+                    </div>
+                    <div style="display: flex; margin-right: 3%;">
+                        <input type="radio" id="jing" name="qqe" value="อบรม/สัมมนา" style="margin: 0;">
+                        <label for="jing" style="font-weight: normal;">อบรม/สัมมนา</label>
+                    </div>
+                    <div style="display: flex;  margin-right: 3%;">
+                        <input type="radio" id="mao" name="qqe" value="ดูงาน" style="margin: 0;">
+                        <label for="mao" style="font-weight: normal;">ดูงาน</label>
+                    </div>
+                    <div style="display: flex; margin-right: 3%;">
+                        <input type="radio" id="jing" name="qqe" value="ติดต่องาน" style="margin: 0;">
+                        <label for="jing" style="font-weight: normal;">ติดต่องาน</label>
+                    </div>
+                    <div style="display: flex; margin-right: 3%;">
+                        <input type="radio" id="jing" name="qqe" value="อื่น ๆ" style="margin: 0;">
+                        <label for="jing" style="font-weight: normal;">อื่น ๆ</label>
+                    </div>
+                </div>    
+            </div>
+            <!--third_part-->
+            <div class="About_the_project">
+                <label for="project">เรื่อง/หลักสูตร/โครงการ:</label>
+                <input id="project" type="text" >
+            </div>
+
+        <div class="location" id="location" style="display: block;">
+            <div class="at">
+                <label>ณ :</label>
+                <input id="at" type="text">
+        </div>
+
+        <div class="in-date_1"><!--ในวันที่เวลา-->
+            <div class="u10d1">
+            <label for="thai-datepicker2">ใน วันที่:</label>
+            <input id="thai-datepicker2" type="text" placeholder="ว/ด/ปี">
+            </div>
+            <div class="in-date_2">
+            <label for="thai-datepicker3">ถึง วันที่:</label>
+            <input id="thai-datepicker3" type="text" placeholder="ว/ด/ปี">
+            </div>   
+        </div>        
+        <div class="dateTogo"><!--ไปเวลา-->
+            <div class="dateTogo_1">
+            <label for="thai-datepicker4" >เดินทางไป วันที่:</label>
+            <input id="thai-datepicker4" type="text" placeholder="ว/ด/ปี">
+            </div>
+            <div class="dateTogo_2">
+            <label for="thai-datepicker5">เดินทางกลับ วันที่:</label>
+            <input id="thai-datepicker5" type="text" placeholder="ว/ด/ปี">
+            </div>   
+        </div>
+        </div>
+        <!--separate_line-->
+        <hr class="solid">
+        <!--cost_part-->
+        <!--label-->
+        <h2 style="color: rgb(83, 83, 83); font-size: 1.5rem; margin: 1.2rem 0;">ประมาณค่าใช้จ่ายในการเดินทางไปราชการ</h2>
+        <!--ค่าเบี้ยเลี้ยง-->
+        <div class="allowance">
+            <div class="F_line" style="display: flex; justify-content: space-between;">
+            <label>1.ค่าเบี้ยเลี้ยง</label>
+            <div class="cost_display">
+                <p>เป็นจำนวนเงิน</p>
+                <span id="result">&nbsp;0</span>
+                <p>&nbsp;บาท</p>
+            </div>
+            </div>
+            <div class="idd">
+            <div>
+            <div class="f2_1">    
+                <input id="mc_1" type="text" class="comma-number" placeholder="ค่าเบี้ยเลี้ยง(บาท)">
+                <input id="pc_1" type="number" placeholder="จำนวนคน">   
+                <input id="dc_1" type="number" placeholder="จำนวนวัน">
+            </div>
+            <div class="f2_1">    
+                <input id="mc_2" type="text" class="comma-number" placeholder="ค่าเบี้ยเลี้ยง(บาท)">
+                <input id="pc_2" type="number" placeholder="จำนวนคน">   
+                <input id="dc_2" type="number" placeholder="จำนวนวัน">
+            </div>
+            </div>
+            </div>
+        </div>
+        <!--Accommodation_cost-->
+        <div class="accommodation" id="accommodation">
+            <div class="F_line" style="display: flex; width: 100%; justify-content: space-between;">
+            <label style="margin-right: 3%; width: 10%;">2. ค่าที่พัก</label>
+                <div style="width: 25%; display: flex;">
+                    <div style="display: flex;  margin-right: 10%;">
+                        <input type="radio" id="mao" name="fav_language" value="เหมาจ่าย" style="margin: 0;">
+                        <label for="mao" style="font-weight: normal;  align-content: center;">เหมาจ่าย</label>
+                    </div>
+                    <div style="display: flex;">
+                        <input type="radio" id="jing" name="fav_language" value="จ่ายจริง" style="margin: 0;">
+                        <label for="jing" style="font-weight: normal; align-content: center;">จ่ายจริง</label>
+                    </div>
+                </div>
+                <div class="cost_display" style="width: 30%; justify-content: flex-end;">
+                    <div class="tatal-cost_accommodation" id="top-right-total">
+                    <p>เป็นจำนวนเงิน&nbsp;</p>
+                    <span id="result_2">0</span>
+                    <p>&nbsp;บาท</p>
+                </div> 
+                </div>    
+            </div>
+            <div class="all" id="all">
+                <div class="detail_cost">
+                    <input class="accommodation_cost comma-number" name="accommodation_cost_1" type="text" placeholder="ค่าที่พัก">
+                    <input class="accommodation_person" name="accommodation_person_1" type="number" placeholder="จำนวห้อง">
+                    <input class="accommodation_day" name="accommodation_day_1" type="number" placeholder="จำนวนวัน">
+                    <button class="add-btn" onclick="addAccommodationLine()" style="text-align: center; margin: 0;">＋</button>
+                </div>
+                <!-- ยอดรวมเงิน --> 
+            </div>                      
+        </div>
+            <!--ยานพาหนะ-->
+            <div class="Transportation_expenses">
+                <div class="F_line" style="display: flex; justify-content: space-between;">
+                    <p style="margin-bottom: 0;">3.ค่าพาหนะ</p>
+                <div class="cost_display">
+                    <p style="margin: 0; display: flex; align-items: center;">เป็นจำนวนเงิน&nbsp;</p>
+                    <span class="vehicles_cost" id="Transportation_expenses_result" style="margin: 0; display: flex; align-items: center;">0</span>
+                    <p style="margin: 0; display: flex; align-items: center;">&nbsp;บาท</p>                        
+                </div>
+                </div>    
+                <form id="List" class="Transportation-expenses_List" style="margin-top: 1%;">
+                    <div style="margin-right: 4.6%;">
+                        <input  type="checkbox" data-id="airplane" name="topicT" value="เครื่องบิน">
+                        <label for="airplane">เครื่องบิน</label><br>
+                    </div>
+                    <div>
+                        <input type="checkbox" data-id="train" name="topicT" value="รถไฟ">
+                        <label for="train">รถไฟ</label><br>
+                    </div>
+                    <div>
+                        <input type="checkbox" data-id="bus" name="topicT" value="รถประจำทาง">
+                        <label for="bus">รถประจำทาง</label>
+                    </div>
+                    <div>
+                        <input type="checkbox" data-id="reign_car" id="reign_car" name="topicT" value="รถยนต์ของทางราชการ">
+                        <label for="reign_car">รถยนต์ของทางราชการ</label>
+                    </div>
+                    <div>
+                        <input type="checkbox" data-id="personal_car" id="personal_car" name="topicT" value="รถยนต์ส่วนบุคคล">
+                        <label for="personal_car">รถยนต์ส่วนบุคคล</label>
+                    </div>
+                    <div>
+                        <input type="checkbox" data-id="vv" name="topicT" value="พาหนะรับจ้าง">
+                        <label for="vv">พาหนะรับจ้าง</label>
+                    </div>
+                </form>
+                    <div id="personal_car_box" class="input-box" style="display: none;">
+                        <label style="width: 80%; display: flex; justify-content: space-between; align-items: center; margin-bottom: 1%; margin-right: 1%;">รถยนต์ส่วนบุคคล:
+                            <input type="text" placeholder="หมายเลขทะเบียนรถ" style="margin: 0; margin-left: 4.5%; width: 20%;">
+                            <input type="text" placeholder="ผู้ขับรถ" style="margin: 0; width: 25%;">
+                            <input type="text" class="comma-number" placeholder="ระยะทาง" style="margin: 0; width: 10%;">
+                            <label style="text-align: center;">
+                            <input type="checkbox" id="R_personal_car_roundtrip" style="text-align: center; margin: 0;">
+                                ไป - กลับ
+                            </label>
+                        </label>
+                        <div class="cost_display" style="align-items: center; margin: 0; margin-bottom: 1%; width: 19%; justify-content: flex-end;">
+                            <p style="margin: 0;">เป็นจำนวนเงิน</p>
+                            <span id="total_personal_car">&nbsp;0</span>
+                            <p style="margin: 0;">&nbsp;บาท</p> 
+                        </div> 
+                    </div>
+                        <div style="display: flex; align-items: center; margin-bottom: 1%; display: none; width: 100%;" id="reason_personal_car">
+                            <p style="margin-right: 1%;">เนื่องจาก:</p>
+                            <input type="text"  placeholder="สาเหตุในการขอใช้รถยนต์ส่วนบุคคลในการเดินทางไปราชการ" style="width: 95%;" id="reason_personal_car_" >
+                        </div>  
+
+                    <div id="reign_car_box" class="input-box" style="display: none;">
+                    <label style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1%; margin-right: 1%; width: 80%;">รถยนต์ของทางราชการ:<input type="text" placeholder="หมายเลขทะเบียนรถ" style=" margin: 0; margin-left: 0%; width: 20%;"><input type="text" placeholder="พนักงานขับรถ" style="margin: 0; width: 25%;"><input type="text" class="comma-number" placeholder="ระยะทาง" style="margin: 0; width: 10%;">
+                    <label style="text-align: center;">
+                    <input type="checkbox" id="R_personal_car_roundtrip" style="text-align: center; margin: 0;">
+                        ไป - กลับ
+                    </label>
+                    </label>
+                    <div class="cost_display" style="align-items: center; margin: 0; margin-bottom: 1%; width: 20%; justify-content: flex-end;" >
+                        <p style="margin: 0;">เป็นจำนวนเงิน</p>
+                        <span id="total_reign_car">&nbsp;0</span>
+                    <p style="margin: 0;">&nbsp;บาท</p> 
+                    </div> 
+                    </div>
+                    <div id="airplane_box" class="input-box" style="display: none; width: 100%;">
+                        <label style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1%; width: 100%">เครื่องบิน:<input type="text" placeholder="รายละเอียด" style="width: 65%; margin: 0; margin-left: 2.5%;"><input type="text" class="comma-number" placeholder="จำนวนเงิน" style="margin: 0;"></label>
+                    </div>
+                    <div style="display: flex; align-items: center; margin-bottom: 1%; display: none; width: 100%;" id="reason_airplane">
+                        <p style="margin-right: 1%;">เนื่องจาก:</p>
+                        <input id="rea" type="text" placeholder="สาเหตุในการขอใช้เครื่องบินในการเดินทางไปราชการ" style="width: 95%; margin-left: 2%;">
+                    </div>
+                    <div id="train_box" class="input-box" style="display: none;">
+                        <label style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1%; width: 100%">รถไฟ:<input type="text" placeholder="รายละเอียด" style="width: 65%; margin: 0; margin-left: 5%;"><input type="text" class="comma-number" placeholder="จำนวนเงิน" style="margin: 0;"></label>
+                    </div>
+                    <div id="bus_box" class="input-box" style="display: none;">
+                        <label style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1%; width: 100%">รถประจำทาง:<input type="text" placeholder="รายละเอียด" style="width: 65%; margin: 0;"><input type="text" class="comma-number" placeholder="จำนวนเงิน" style="margin: 0;"></label>
+                    </div>
+                    <div id="vv_box" class="input-box" style="display: none;">
+                        <label style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1%; width: 100%">พาหนะรับจ้าง:<input type="text" placeholder="รายละเอียด" style="width: 65%; margin: 0;"><input type="text" class="comma-number" placeholder="จำนวนเงิน" style="margin: 0;"></label>
+                    </div>
+            </div>
+
+            <!--ค่าลงทะเบียน-->
+            <div class="Registration">
+                <div class="F_line" style="display: flex; justify-content: space-between;">
+                <label style="margin: 0; display: flex; align-items: center;">4. ค่าลงทะเบียน</label>
+                <div style="width: 60%; margin: 0; justify-content: flex-end;">
+                    <button class="add-btn" onclick="addRegistrationfeeLine()" style="margin: 0; margin-right: 3%; margin-left: 11.5%; background-color:#0004ff;">＋</button>
+                    <div class="Registration_fee">
+                        <p style="margin: 0; display: flex; align-items: center;">เป็นจำนวนเงิน&nbsp;</p>
+                        <span id="Registration-fee_result" style="margin: 0; display: flex; align-items: center;">0</span>
+                        <p style="margin: 0; display: flex; align-items: center;">&nbsp;บาท</p>                        
+                    </div>
+                </div>
+                </div>
+                <div class="Registration_fee_detail" id="Registration_fee_detail" style="display: block; margin-top: 1%;"></div>
+            </div>
+
+            <div style="display:none; margin-top: 1%; margin-bottom: 1%;" id="reign_car4412">
+                <labe style="width: 100%;">5. ค่าตอบแทนพนักงานขับรถ </label>
+                <div style="width: 100%; display: flex; justify-content: space-between;">
+                    <div style="width: 50%;">
+                        <input id="ggx1" type="text" class="comma-number" placeholder="จำนวนเงิน" style="margin: 0;"> X 
+                        <input id="ggx2" type="text" class="comma-number" placeholder="จำนวนวัน" style="margin: 0;">
+                    </div>
+                    <div class="cost_display" style="align-items: center; margin: 0; margin-bottom: 1%;" >
+                    <p style="margin: 0; display: flex; align-items: center;">เป็นจำนวนเงิน&nbsp;</p>
+                    <span id="reign_car4412_result" style="margin: 0; display: flex; align-items: center;">0</span>
+                    <p style="margin: 0; display: flex; align-items: center;">&nbsp;บาท</p>
+                    </div>
+                </div>   
+            </div>
+
+            <!--ค่าใช้จ่ายอื่นๆ-->
+            <div class="other-cost">
+                <div class="F_line" style="display: flex; justify-content: space-between;">
+                <label style="margin: 0; display: flex; align-items: center;">5. ค่าใช้จ่ายอื่นๆ</label>
+                <div class="cost_display" style="margin: 0; width: 60%; justify-content: flex-end;">
+                    <button class="add-btn" onclick="addothercostLine()" style="margin: 0; margin-right: 3%; margin-left: 11.5%; background-color:#0004ff;">＋</button>
+                    <div class="other-cost2" >
+                        <p style="margin: 0; display: flex; align-items: center;">เป็นจำนวนเงิน&nbsp;</p>
+                        <span id="other-cost_result" style="margin: 0; display: flex; align-items: center;">0</span>
+                        <p style="margin: 0; display: flex; align-items: center;">&nbsp;บาท</p>                        
+                    </div>
+                </div>
+                </div>
+                <div class="other-cost_detail" id="other-cost_detail" style="display: block; margin-bottom: 1rem;"></div>
+            </div>
+            <!--ไม่เบิกค่าใช้จ่ายจากทางราชการ-->
+                <input type="checkbox" id="nno" name="nno" value="ไม่เบิกค่าใช้จ่ายจากทางราชการ" style="display: inline;">
+                <label for="nno" style="display: inline; margin-left: 0.5%;">ไม่เบิกค่าใช้จ่ายจากทางราชการ</label><br> 
+                
+            <!--ค่าใช้จ่ายรวม-->
+            <div class="all-cost" style="margin-top: 1rem; display: block; margin-bottom: 7%;">
+                <div class="all-cost1" style="display: flex;  float: right; ">
+                    <p style="margin: 0; display: flex; align-items: center;">รวมค่าใช้จ่ายเป็นเงินประมาณ&nbsp;&nbsp;</p>
+                    <span id="GrandTotal" style="margin: 0; display: flex; align-items: center;">0</span>
+                    <p style="margin: 0; display: flex; align-items: center;">&nbsp;บาท</p>                        
+                </div>
+            </div>
+
+        </div>
+
+    </div>
+    </div> 
+
+    <h1 style="margin-top: 3%;" id="h1" class="n_display">แบบฟอร์มบันทึกรายงานการเดินทางไปราชการ</h1>
+    <div id="container2" class="n_display">
+            <div class="draft_form">
+            <!--label-->
+            <h2 style="color: rgb(83, 83, 83); font-size: 1.5rem; margin: 0 0 1.2rem 0;">ร่างแบบฟอร์มบันทึกรายงานเดินทางไปราชการ</h2>
+            </div>
+
+            <div class="contac_Num">
+                <div class="con_number">
+                <label for="con_number">สัญญายืมเงินเลขที่:</label>
+                <input id="con_number" type="text" placeholder="&nbsp;&nbsp;กรุณากรอกเลขหนังสือสัญญายืมเงิน">
+                </div>
+                <div class="date_6">
+                <label for="thai-datepicker6">วันที่ :</label>
+                <input id="thai-datepicker6" type="text" placeholder="ว/ด/ปี">
+                </div>
+            </div>
+
+            <div class="contac_Num">
+                <div class="con_number">
+                <label>ผู้ยืมเงิน :</label>
+                <input id="Borrower" type="text">
+                </div>
+                <div class="date_6">
+                <label>จำนวนเงิน :</label>
+                <input  id="amount_borrow" type="text" class="comma-number">
+                </div>
+            </div>
+            <hr class="solid">
+            <div class="re">
+                <p style="display: block; margin: 0;">รายงานการเดินทางไปราชการ</p>
+                <div class="rebd" style="display: flex; justify-content: space-between;">
+                    <div class="rebd1" style="width: 30%;">
+                        <label for="rebd1">วันที่</label>
+                        <input id="thai-datepicker7" type="text" placeholder="วันที่รายงานการเดินทาง">
+                    </div>
+                    <div class="rebd2" style="width: 30%;">
+                        <label for="ตามเลขที่หนังสือ">ตามเลขที่หนังสือ</label>
+                        <input type="text" id="rebd2" value="อว.0605.14/............">
+                    </div>
+                    <div class="rebd3" style="width: 30%;">
+                        <label for="thai-datepicker8">วันที่</label>
+                        <input type="text" id="thai-datepicker8" placeholder="วันที่ขออนุมัติเดินทาง" >
+                    </div>
+                </div>
+
+                <div class="topic_re">
+                    <label for="topic_re">เรื่อง :</label>
+                    <input id="topic_re" type="text" value="ขออนุมัติเบิกค่าใช้จ่ายในการเดินทางไปราชการ" readonly> 
+                </div>
+
+                <div class="dear_re">
+                    <label for="dear_re">เรียน :</label>
+                    <input id="dear_re" type="text" value="คณบดีคณะวิศวกรรมศาสตร์"> 
+                </div>
+
+                <p style="display: block; margin: 0;">ผู้ขออนุมัติ:</p>
+                <div class="wrq_re" style="display: flex; justify-content: space-between;">
+                    <div class="wrq_re1" style="width: 30%;">
+                        <label for="rebd1">ชื่อ-นามสกุล</label>
+                        <input id="nrq_re" type="text">
+                    </div>
+                    <div class="wrq_re2" style="width: 30%;">
+                        <label for="ตามเลขที่หนังสือ">ตำแหน่ง</label>
+                        <input type="text" id="pst_re">
+                    </div>
+                    <div class="wrq_re3" style="width: 30%;">
+                        <label for="">สังกัด</label>
+                        <input type="text" id="pt_re">
+                    </div>
+                </div>
+
+                <p style="display: inline; margin: 0;">ผู้ร่วมเดินทาง</p><button class="remove-btn" style="background-color: blue; margin: 0; margin-left: 1%;" onclick="addrow()">&plus;</button>                    <button class="remove-btn" style="background-color: red; margin: 0;" onclick="removerow()">
+                    &minus;
+                    </button>
+                <div class="gw_re" id="gw_re" style="margin-bottom: 1rem; margin-top: 1%;">
+                </div>
+
+                <div class="w_re">
+                    <label for="w_re">เดินทางไปราชการเพื่อ :</label>
+                <div style="display: flex; margin-bottom: 2.5%;">
+                    <div style="display: flex;  margin-right: 3%;">
+                        <input type="radio" id="mao" name="qqee" value="เข้าร่วมประชุม" style="margin: 0;">
+                        <label for="mao" style="font-weight: normal;">เข้าร่วมประชุม</label>
+                    </div>
+                    <div style="display: flex; margin-right: 3%;">
+                        <input type="radio" id="jing" name="qqee" value="อบรม/สัมมนา" style="margin: 0;">
+                        <label for="jing" style="font-weight: normal;">อบรม/สัมมนา</label>
+                    </div>
+                    <div style="display: flex;  margin-right: 3%;">
+                        <input type="radio" id="mao" name="qqee" value="ดูงาน" style="margin: 0;">
+                        <label for="mao" style="font-weight: normal;">ดูงาน</label>
+                    </div>
+                    <div style="display: flex; margin-right: 3%;">
+                        <input type="radio" id="jing" name="qqee" value="ติดต่องาน" style="margin: 0;">
+                        <label for="jing" style="font-weight: normal;">ติดต่องาน</label>
+                    </div>
+                    <div style="display: flex; margin-right: 3%;">
+                        <input type="radio" id="jing" name="qqee" value="อื่น ๆ" style="margin: 0;">
+                        <label for="jing" style="font-weight: normal;">อื่น ๆ</label>
+                    </div>
+                </div>
+                </div>
+
+                <div class="subject_re">
+                    <label for="subject_re">เรื่อง/หลักสูตร/โครงการ :</label>
+                    <input id="subject_re" type="text" > 
+                </div>   
+
+                <div class="lo_re">
+                    <label for="lo_re">ณ :</label>
+                    <input id="lo_re" type="text" > 
+                </div> 
+
+                <div class="WTogo_re" style="display: flex;">                    
+                    <div style="margin-right: 10%;">
+                    <label for="thai-datepicker9">เดินทางไป วันที่ เวลา :</label>
+                    <input id="thai-datepicker9" type="text" style="width: 46%;"  placeholder="ว/ด/ปี">
+                    <input id="timepicker3" type="text" placeholder="เลือกเวลา">
+                    <div style="margin-top: 0.5rem; display: flex;" >
+                        <label style="margin-right: 1em;">
+                        <input type="checkbox" name="OO" id="GH" value="บ้านพัก"> บ้านพัก
+                        </label>
+                        <label style="margin-right: 1em;">
+                        <input type="checkbox" name="OO" id="GS" value="สำนักงาน"> สำนักงาน
+                        </label>
+                        <label style="margin-right: 1em;">
+                        <input type="checkbox" name="OO" id="GT" value="ประเทศไทย"> ประเทศไทย
+                        </label>
+                        <label>
+                        <input type="checkbox" name="OO" id="GF" value="ต่างประเทศ"> ต่างประเทศ
+                        </label>
+                    </div>
+                    </div>
+                    <div>
+                    <label for="thai-datepicker10">เดินทางกลับ วันที่ เวลา :</label>                       
+                    <input id="thai-datepicker10" type="text" style="width: 46%;"  placeholder="ว/ด/ปี">
+                    <input id="timepicker4" type="text" placeholder="เลือกเวลา">
+                    <div style="margin-top: 0.5rem; display: flex;" >
+                        <label style="margin-right: 1em;">
+                        <input type="checkbox" name="OO2" id="GH2" value="บ้านพัก"> บ้านพัก
+                        </label>
+                        <label style="margin-right: 1em;">
+                        <input type="checkbox" name="OO2" id="GS2" value="สำนักงาน"> สำนักงาน
+                        </label>
+                        <label style="margin-right: 1em;">
+                        <input type="checkbox" name="OO2" id="GT2" value="ประเทศไทย"> ประเทศไทย
+                        </label>
+                        <label>
+                        <input type="checkbox" name="OO2" id="GF2" value="ต่างประเทศ"> ต่างประเทศ
+                        </label>
+                    </div>
+                    </div>   
+                </div>
+
+                <p id="daysresult" style="display: none;"></p>
+                <hr class="solid">
+                <h2 style="display: block; text-align: center;">รายละเอียดค่าใช้จ่ายรายบุคคล</h2>
+                <div class="re_cost" id="re_cost" style="display: block;">
+                    <div class="t_re_cost">
+                        <div style="padding: 1%; padding-top: 3%;"><p>ชื่อ-นามสกุล</p>
+                        <input type="text" id="name_re_1" placeholder="ชื่อ-นามสกุล" readonly></div>
+                        <div style="padding: 1%; padding-top: 3%; width: 15%;"><p>ตำแหน่ง</p>
+                        <input id="position_re_1" type="text" readonly></div>
+                        <div style="width: 10%;"><p>ค่าเบี้ยเลี้ยง</p>
+                        <input class="allowance_p2 comma-number" id="allowance_p2_1" type="text" min="0"></div>
+                        <div style="width: 10%;"><p>ค่าที่พัก</p>
+                        <input class="accommodation_p2 comma-number" id="accommodation_p2_1" type="text" min="0"></div>
+                        <div style="width: 10%;"><p>ค่าพาหนะ</p>
+                        <input class="vehicles_p2 comma-number" id="vehicles_p2_1" type="text" min="0"></div>
+                        <div style="width: 10%; display: none;"><p>ค่าลงทะเบียน</p>
+                        <input class="Registration_p2 comma-number" id="Registration_p2_1" type="text" min="0"></div>
+                        <div style="width: 10%;"><p>ค่าใช้จ่ายอื่นๆ</p>
+                        <input class="other_p2 comma-number" id="other_p2_1" type="text" min="0"></div>
+                        <div style="width: 10%;"><p>รวม</p>
+                        <input class="total_p2" id="total_p2_1" type="text" readonly></div>
+                        <input class="total_p_1" id="total_p_1" type="text" readonly style="display: none;";>
+                    </div>
+                    <p id="thisResult1" style="display: none;">0</p>
+                    <p id="thisResult2" style="display: none;">0</p>
+                    <p id="thisResult3" style="display: none;">0</p>
+                    <p id="thisResult4" style="display: none;">0</p>
+                    <p id="thisResultGran" style="display: none;">0</p>
+                </div>
+                </div>
+                    <div class="a12" style="display: flex; width: 100%; ">
+                        <input class="summary-label" id="summary-label" type="text" placeholder="รวมเป็นเงิน" value="รวมเป็นเงิน" readonly style="width: 39%; margin-left: 1%; text-align: center;">
+                        <input class="summary-allowance" id="summary-allowance" type="text" min="0" placeholder="ค่าเบี้ยเลี้ยง" style="width: 9.5%; text-align: center;" readonly>
+                        <input class="summary-accommodation" id="summary-accommodation" type="text" min="0" placeholder="ค่าที่พัก" style="width: 9.5%; text-align: center;" readonly>
+                        <input class="summary-vehicle" id="summary-vehicle" type="text" min="0" placeholder="ค่าพาหนะ" style="width: 9.5%; text-align: center;" readonly>
+                        <input class="summary-other" id="summary-other" type="text" min="0" placeholder="ค่าใช้จ่ายอื่นๆ" style="width: 9.5%; text-align: center;" readonly>
+                        <input class="summary-total" id="summary-total" type="text" readonly placeholder="รวมทั้งหมด" style="width: 9.5%; text-align: center;" readonly>            
+                    </div>
+                <hr class="solid">
+                <!--ส่วนของรายงานค่าใช้จ่ายที่ใช้จริงในการเดินทาง-->
+
+                <!--
+                classList
+                    Real_allowance = ส่วนของค่าเบี้ยเลี้ยงทั้งหมด
+                        cost_display  = ส่วนแสดงผลยอดเงิน
+                            Real_allowance_1 = ค่าเบี้ยเลี้ยงบรรทัดที่1
+                            Real_allowance_2 = ค่าเบี้ยเลี้ยงบรรทัดที่2
+                IdList
+                    Real_GrandTotal_Allowance_Cost = ยอดรวมทั้งหมดของค่าเบี้ยเลี้ยง
+                    real_allowance_cost_(n) = ค่าเบี้ยเลี้ยงของบรรทัดที่ n
+                    real_NumberOfPersons_(n) = จำนวนคนของบรรทัดที่ n
+                    real_NumberOfDate_(n) = จำนวนวันของบรรทัดที่ n
+                    real_AllowanceCost_(n) =ยอดค่าเบี้เลี้ยงบรรทัดที่ n 
+                -->
+
+    <!--just label-->
+    <h2 style="color: rgb(83, 83, 83); font-size: 1.5rem; margin: 1.2rem 0;">ค่าใช้จ่ายในการเดินทางไปราชการ</h2>
+        <!--ค่าเบี้ยเลี้ยง-->
+        <div style="display: flex; margin-bottom: 2%;">
+            <p>ขอเบิกค่าใช้จ่ายในการเดินทางไปราชการสำหรับ</p>
+            <div style="display: flex; margin-left: 1%;">
+                <label><input type="radio" name="radio1" id="bb" value="ข้าพเจ้า">ข้าพเจ้า</label>
+                <label><input type="radio" name="radio1" id="bb2" value="คณะเดินทาง">คณะเดินทาง</label>
+            </div>
+        </div>
+        <div class="Real_allowance">
+            <div class="h_part">
+                    <p>1.ค่าเบี้ยเลี้ยง</p>
+                <div class="cost_display">
+                    <p>เป็นจำนวนเงินทั้งหมด</p>
+                    <span id="Real_GrandTotal_Allowance_Cost">&nbsp;0</span>
+                    <p>&nbsp;บาท</p> 
+                </div>           
+            </div>
+            <div class="Real_allowance_1"> 
+                <div class="left_part">
+                    <input id="real_allowance_cost_1" type="text" class="comma-number" placeholder="ค่าเบี้ยเลี้ยง(บาท)">
+                    <input id="real_NumberOfPersons_1" type="number" placeholder="จำนวนคน">   
+                    <input id="real_NumberOfDate_1" type="number" placeholder="จำนวนวัน">
+                </div>
+            </div>
+            <div class="Real_allowance_2">    
+                <div class="left_part">
+                    <input id="real_allowance_cost_2" type="text" class="comma-number" placeholder="ค่าเบี้ยเลี้ยง(บาท)">
+                    <input id="real_NumberOfPersons_2" type="number" placeholder="จำนวนคน">   
+                    <input id="real_NumberOfDate_2" type="number" placeholder="จำนวนวัน">
+                </div>
+            </div>
+        </div> 
+        <!--EndOfAllowance-->
+        <!--Accommodation-->
+        <!--
+            ClassList
+                Real_accommodation = ส่วนค่าที่พักที่ใช้จริง
+        -->
+        <div class="Real_accommodation" id="Real_accommodation">
+            <div class="h_part">
+                <div class="left_part">
+                    <p>2.ค่าที่พัก</p>
+                    <label><input type="radio" name="radio_re" value="เหมาจ่าย">เหมาจ่าย</label>
+                    <label><input type="radio" name="radio_re" value="จ่ายจริง">จ่ายจริง</label> 
+                </div>              
+                <div class="cost_display">
+                    <p>เป็นจำนวนเงินทั้งหมด&nbsp;</p>
+                    <span id="Real_GrandTotal_Accommodation_Cost">0</span>
+                    <p>&nbsp;บาท</p> 
+                </div>
+            </div>
+            <div class="Real_accommodation_1">
+                <div class="left_part">
+                    <input class="real_accommodation_cost comma-number" id="real_accommodation_cost_1" type="text" placeholder="ค่าที่พัก">
+                    <input class="real_accommodation_person" id="real_accommodation_person_1" type="number" placeholder="จำนวนห้อง">
+                    <input  class="real_accommodation_day" id="real_accommodation_day_1" type="number" placeholder="จำนวนวัน">
+                    <button class="add-btn" onclick="addRealAccommodationRow()" style="text-align: center; margin: 0; background-color: blue;">&plus;</button>
+                </div>
+            </div>
+        </div>
+        <!--EndOfAccommodation-->
+        <!--ค่ายานพาหนะ-->
+            <div class="Real_Transportation_expenses">
+                <div class="F_line" style="display: flex; justify-content: space-between;">
+                    <p style="margin-bottom: 0;">3.ค่าพาหนะ</p>
+                <div class="cost_display">
+                    <p style="margin: 0; display: flex; align-items: center;">เป็นจำนวนเงิน&nbsp;</p>
+                    <span class="R_vehicles_cost" id="R_Transportation_expenses_result" style="margin: 0; display: flex; align-items: center;">0</span>
+                    <p style="margin: 0; display: flex; align-items: center;">&nbsp;บาท</p>                        
+                </div>
+                </div>
+                <form id="RE_List" class="Real_Transportation-expenses_List" >
+                    <div style="margin-right: 4.6%;">
+                        <input type="checkbox" data-id="R_airplane" name="type" value="เครื่องบิน">
+                        <label for="R_airplane">เครื่องบิน</label><br>
+                    </div>
+                    <div>
+                        <input type="checkbox" data-id="R_train" name="type" value="รถไฟ">
+                        <label for="R_train">รถไฟ</label><br>
+                    </div>
+                    <div>
+                        <input type="checkbox" data-id="R_bus" name="type" value="รถประจำทาง">
+                        <label for="R_bus">รถประจำทาง</label>
+                    </div>
+                    <div>
+                        <input type="checkbox" data-id="R_reign_car" id="R_reign_car" name="type" value="รถยนต์ของทางราชการ">
+                        <label for="R_reign_car">รถยนต์ของทางราชการ</label>
+                    </div>
+                    <div>
+                        <input type="checkbox" data-id="R_personal_car" id="R_personal_car" name="type" value="รถยนต์ส่วนบุคคล">
+                        <label for="R_personal_car">รถยนต์ส่วนบุคคล</label>
+                    </div>
+                    <div>
+                        <input type="checkbox" data-id="R_vv" name="type" value="พาหนะรับจ้าง">
+                        <label for="R_personal_car">พาหนะรับจ้าง</label>
+                    </div>
+                </form>
+                <div id="R_personal_car_box"  class="input-box" style="display: none;">
+
+                    <label style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1%; margin-right: 1%; width: 80%;">รถยนต์ส่วนบุคคล:<input type="text" placeholder="หมายเลขทะเบียนรถ" style=" margin: 0; margin-left: 4.5%; width: 20%;"><input type="text" placeholder="ผู้ขับรถ" style="margin: 0; width: 25%;"><input type="text" class="comma-number" placeholder="ระยะทาง" style="margin: 0; width: 10%;">
+                    <label style="text-align: center;">
+                    <input type="checkbox" id="R_personal_car_roundtrip" style="text-align: center; margin: 0;">
+                        ไป - กลับ
+                    </label>
+                    </label>
+                    <div class="cost_display" style="align-items: center; margin: 0; margin-bottom: 1%; width: 19%; justify-content: flex-end;">
+                        <p style="margin: 0;">เป็นจำนวนเงิน</p>
+                        <span id="R_total_personal_car">&nbsp;0</span>
+                        <p style="margin: 0;">&nbsp;บาท</p>
+                </div>
+                </div>
+                <div id="R_reign_car_box" class="input-box" style="display: none;">
+                    <label style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1%; margin-right: 1%; width: 80%;">รถยนต์ของทางราชการ:<input type="text" placeholder="หมายเลขทะเบียนรถ" style=" margin: 0; margin-left: 0%; width: 20%;"><input type="text" placeholder="พนักงานขับรถ" style="margin: 0; width: 25%;"><input type="text" class="comma-number" placeholder="ระยะทาง" style="margin: 0; width: 10%;">                    <label style="text-align: center;">
+                    <input type="checkbox" id="R_car_roundtrip" style="text-align: center; margin: 0;">
+                        ไป - กลับ
+                    </label></label>
+                    <div class="cost_display" style="align-items: center; margin: 0; margin-bottom: 1%; width: 20%; justify-content: flex-end;" >
+                        <p style="margin: 0;">เป็นจำนวนเงิน</p>
+                        <span id="R_total_reign_car">&nbsp;0</span>
+                        <p style="margin: 0;">&nbsp;บาท</p> 
+                    </div>
+                </div>
+                <div id="R_airplane_box" class="input-box" style="display: none; width: 100%;">
+                    <label style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1%; width: 100%">เครื่องบิน:<input type="text" placeholder="รายละเอียด" style="width: 65%; margin: 0; margin-left: 2.5%;"><input type="text" class="comma-number" placeholder="จำนวนเงิน" style="margin: 0;"></label>
+                </div>
+                <div id="R_train_box" class="input-box" style="display: none;">
+                    <label style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1%; width: 100%">รถไฟ:<input type="text" placeholder="รายละเอียด" style="width: 65%; margin: 0; margin-left: 5%;"><input type="text" class="comma-number" placeholder="จำนวนเงิน" style="margin: 0;"></label>
+                </div>
+                <div id="R_bus_box" class="input-box" style="display: none;">
+                    <label style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1%; width: 100%">รถประจำทาง:<input type="text" placeholder="รายละเอียด" style="width: 65%; margin: 0;"><input type="text" class="comma-number" placeholder="จำนวนเงิน" style="margin: 0;"></label>
+                </div>
+                <div id="R_vv_box" class="input-box" style="display: none;">
+                    <label style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1%; width: 100%">พาหนะรับจ้าง:<input type="text" placeholder="รายละเอียด" style="width: 65%; margin: 0;"><input type="text"  class="comma-number" placeholder="จำนวนเงิน" style="margin: 0;"></label>
+                </div>
+                
+
+            </div>
+            <!--End ค่าพาหนะ-->
+            <!--Endพาหนะรับจ้าง-->
+            <div style="display:none; margin-top: 1%; margin-bottom: 1%;" id="reign_car4413">
+                <labe style="width: 100%;">4. ค่าตอบแทนพนักงานขับรถ </label>
+                <div style="width: 100%; display: flex; justify-content: space-between;">
+                    <div style="width: 50%;">
+                        <input id="ggx12" type="text" class="comma-number" placeholder="จำนวนเงิน" style="margin: 0;"> X 
+                        <input id="ggx22" type="text" class="comma-number" placeholder="จำนวนวัน" style="margin: 0;">
+                    </div>
+                    <div class="cost_display" style="align-items: center; margin: 0; margin-bottom: 1%;" >
+                    <p style="margin: 0; display: flex; align-items: center;">เป็นจำนวนเงิน&nbsp;</p>
+                    <span id="reign_car4413_result" style="margin: 0; display: flex; align-items: center;">0</span>
+                    <p style="margin: 0; display: flex; align-items: center;">&nbsp;บาท</p>
+                    </div>
+                </div>   
+            </div>
+            <!--other_cost-->
+            <div class="R_Other">
+                <div class="h_part">
+                <div class="left_part">
+                    <p style="margin: 0; display: flex; align-items: center;">4. ค่าใช้จ่ายอื่นๆ</p>
+                </div>
+                    <div class="cost_display">
+                        <div>
+                        <button class="add-btn" onclick="R_addOtherLine()" style="background-color:#0004ff; margin: 0;">＋</button>
+                        </div>
+                        <div class="R_other_cost">
+                            <p style="margin: 0; ">เป็นจำนวนเงินทั้งหมด&nbsp;</p>
+                            <span id="R_other_cost_result" style="margin: 0;">0</span>
+                            <p style="margin: 0; ">&nbsp;บาท</p>                        
+                        </div>
+                    </div>
+                </div>   
+            </div> 
+            <div class="R_other_detail" id="R_other_detail" style="display: block;"></div>
+            <!--EndOtherCost-->
+            <!--ค่าใช้จ่ายรวมจริง-->
+            <div class="R_all-cost" style="margin-top: 3rem; display: block; margin-bottom: 7%;">
+                <div class="R_all-cost1" style="display: flex;  float: right;">
+                    <p style="margin: 0; display: flex; align-items: center;">รวมค่าใช้จ่ายเป็นเงินประมาณ&nbsp;&nbsp;</p>
+                    <span id="R_GrandTotal" style="margin: 0; display: flex; align-items: center;">0</span>
+                    <p style="margin: 0; display: flex; align-items: center;">&nbsp;บาท</p>                        
+                </div>
+            </div>
+            <!--End ค่่าใช้จ่ายรวม-->
+            <!--TextFilde-->
+            <div style="margin-top: 1.5%;">
+                <label for="PS">หมายเหตุ</label>
+                <textarea id="ps" wrap="hard" rows="5" style="width: 100%;"></textarea>
+            </div>
+
+<hr class="solid">
+    <h2 style="color: rgb(83, 83, 83); font-size: 1.5rem; margin: 1.2rem 0;">ใบรับรองแทนใบเสร็จรับเงิน & ใบสำคัญรับเงิน</h2>
+    <div id="form-container1"></div>
+    <center>
+    <button class="add-date" onclick="addDateSection()">&plus; เพิ่มวันที่ใหม่</button>
+    </center>
+    <P id="k" style="display: none;">0</P>
+
+<hr class="solid">
+<h2 style="color: rgb(83, 83, 83); font-size: 1.5rem; margin: 1.2rem 0;">ใบบันทึกข้อความ ขอเบิกเงินค่าลงทะเบียน</h2>
+<div>
+    <label for="s">ค่าลงทะเบียน</label>
+    <div style="display: flex; flex-direction: row; align-items: center; justify-content: space-between;">
+        <input type="text" id="s1" placeholder="รายละเอียดค่าลงทะเบียน" style="width: 70%; text-align: center; margin-bottom: 0;">
+        <input class="comma-number" type="text" id="s" placeholder="ค่าลงทะเบียน" style="width: 20%; text-align: center; margin-bottom: 0;">
+        <p style="text-align: center;">บาท</p>
+    </div>
+
+</div>
+
+
+
+</div>
+<div style="text-align: center; width: 100%; display: flex; justify-content: center;">
+        <div id="bttd" style="margin-bottom: 7rem; width: 100%; text-align: center;">
+            <button class="pdfbtt" type="button" onclick="generatePDF()">ดาวโหลดเอกสาร PDF</button>
+            <!-- <button class="pdfbtt" type="button" onclick="generateDOCX()" style="margin-left: 10px; background-color: #217346;">ดาวโหลดเอกสาร DOCX</button> -->
+        </div>
+        <div id="bttd1" class="n_display" style="margin-bottom: 7rem; width: 100%; align-items: center;">
+            <button class="pdfbtt1" type="button" onclick="generate_reportPDF()">ดาวโหลดเอกสาร</button>
+            <a href="./dc/รายงานไปราชการ ส่งบุคคล.doc"><button class="doc2" type="button">แบบรายงานผล</button></a>
+        </div>
+</div>        
+    <script src="script.js"></script>
+    <script src="report_part.js"></script>
+    <script src="switrch_form.js"></script>
+    <script src="cal_p2.js"></script>
+    <script src="wordcut.min.js"></script>
+    <!--docx library-->
+    <script src="docx-library.js"></script>
+    <script>
+        // Check if docx library loaded properly
+        if (typeof docx !== 'undefined') {
+            console.log('docx library loaded successfully');
+        } else {
+            console.error('docx library failed to load');
+        }
+    </script>
+    <script src="docx_generator.js"></script>
+    <script src="jspdf.js"></script>
+        
+        
+
+
+
+    
+</body>
+</html>
