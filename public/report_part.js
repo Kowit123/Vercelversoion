@@ -210,7 +210,6 @@ if (personalBox && personalBox.style.display !== "none") {
     if (license || driver || distance) {
       const text1 = `-รถยนต์ของทางราชการ 
       หมายเลขทะเบียน ${license || "-"} โดยมี ${driver || "-"} เป็นพนักงานขับรถ 
-      ค่าตอบแทนพนักงานขับรถ ${document.getElementById("ggx12").value} บาท X ${document.getElementById("ggx22").value} วัน
       ระยะทางโดยประมาณ ${distanceFormatted} กม.  เป็นเงิน ${total} บาท`
       const lines = doc.splitTextToSize(text1, pageWidth - 7); // ความกว้างหน้ากระดาษลบ margin ซ้ายขวา
     const firstX = 5;
