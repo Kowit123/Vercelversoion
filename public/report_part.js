@@ -8,10 +8,10 @@ async function generate_reportPDF() {
       });
 
     // ตั้งฟอนต์ไทย
-        doc.addFileToVFS('THSarabunNew-normal.ttf', THSarabunNew_normal);
-        doc.addFont('THSarabunNew-normal.ttf', 'THSarabunNew', 'normal');
-        doc.addFileToVFS('THSarabunNew-bold.ttf', THSarabunNew_bold);
-        doc.addFont('THSarabunNew-bold.ttf', 'THSarabunNew', 'bold');
+        doc.addFileToVFS('../font/THSarabunNew-normal.ttf', THSarabunNew_normal);
+        doc.addFont('../font/THSarabunNew-normal.ttf', 'THSarabunNew', 'normal');
+        doc.addFileToVFS('../font/THSarabunNew-bold.ttf', THSarabunNew_bold);
+        doc.addFont('../font/THSarabunNew-bold.ttf', 'THSarabunNew', 'bold');
         doc.setFont("THSarabunNew");
 
 calculateDuration();
