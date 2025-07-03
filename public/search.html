@@ -22,7 +22,40 @@
   </div>
 
   <script>
-    async function search() {
+    function getDocumentsFromStorage() {
+      const stored = localStorage.getItem('uploadedDocuments');
+      return stored ? JSON.parse(stored) : [];
+    }
+
+    function formatFileSize(bytes) {
+      if (bytes === 0) return '0 Bytes';
+      const k = 1024;
+      const sizes = ['Bytes', 'KB', 'MB', 'GB'];
+      const i = Math.floor(Math.log(bytes) / Math.log(k));
+      return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
+    }
+
+    function downloadDoc(doc) {
+      // Convert base64 back to blob and download
+      const byteCharacters = atob(doc.fileData);
+      const byteNumbers = new Array(byteCharacters.length);
+      for (let i = 0; i < byteCharacters.length; i++) {
+        byteNumbers[i] = byteCharacters.charCodeAt(i);
+      }
+      const byteArray = new Uint8Array(byteNumbers);
+      const blob = new Blob([byteArray], { type: 'application/pdf' });
+      
+      const url = window.URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = doc.originalName;
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      window.URL.revokeObjectURL(url);
+    }
+
+    function search() {
       const keyword = document.getElementById('searchInput').value.trim();
       const resultsDiv = document.getElementById('results');
       resultsDiv.innerHTML = "";
@@ -32,35 +65,46 @@
         return;
       }
 
-      const res = await fetch('/api/search', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ keyword })
+      // Search in local storage
+      const documents = getDocumentsFromStorage();
+      const results = documents.filter((doc) => {
+        const lower = keyword.toLowerCase();
+        return (
+          doc.title.toLowerCase().includes(lower) ||
+          (doc.description && doc.description.toLowerCase().includes(lower))
+        );
       });
 
-      const data = await res.json();
-
-      if (data.length === 0) {
-        resultsDiv.innerHTML = "<p class='text-gray-500'>No documents found.</p>";
+      if (results.length === 0) {
+        resultsDiv.innerHTML = "<p class='text-gray-500 text-center py-4'>No documents found matching your search.</p>";
         return;
       }
 
-      data.forEach(doc => {
+      results.forEach(doc => {
         const div = document.createElement("div");
         div.className = "bg-white p-6 border border-gray-300 rounded-lg shadow hover:shadow-md transition";
         div.innerHTML = `
           <h3 class="text-xl font-semibold text-blue-800">${doc.title}</h3>
           <p class="text-gray-700 mb-2">${doc.description || "-"}</p>
+          <p class="text-sm text-gray-500 mb-3">${doc.originalName} (${formatFileSize(doc.fileSize)})</p>
+          <p class="text-xs text-gray-400 mb-3">Uploaded: ${new Date(doc.uploadedAt).toLocaleString()}</p>
           <div class="flex justify-center">
-          <a href="/uploads/${doc.filename}" target="_blank"
-            class="inline-block mt-3 bg-blue-500 text-white px-4 py-1 rounded hover:bg-blue-700 transition hover:shadow-md">
-            📥 Download PDF
-          </a>
+            <button onclick="downloadDoc(${JSON.stringify(doc).replace(/"/g, '&quot;')})"
+              class="inline-block mt-3 bg-blue-500 text-white px-4 py-1 rounded hover:bg-blue-700 transition hover:shadow-md">
+              📥 Download PDF
+            </button>
           </div>
         `;
         resultsDiv.appendChild(div);
       });
     }
+
+    // Allow search on Enter key
+    document.getElementById('searchInput').addEventListener('keypress', function(e) {
+      if (e.key === 'Enter') {
+        search();
+      }
+    });
   </script>
 </body>
 </html>

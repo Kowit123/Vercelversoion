@@ -1,10 +1,3 @@
-const formidable = require('formidable');
-const fs = require('fs');
-const path = require('path');
-
-// Admin password
-const ADMIN_PASSWORD = '1234';
-
 export default async function handler(req, res) {
   // Handle CORS
   res.setHeader('Access-Control-Allow-Origin', '*');
@@ -19,68 +12,123 @@ export default async function handler(req, res) {
     return res.status(405).json({ error: 'Method not allowed' });
   }
 
+  // Admin password
+  const ADMIN_PASSWORD = '1234';
+
   try {
-    const form = new formidable.IncomingForm();
-    form.uploadDir = path.join(process.cwd(), 'public', 'uploads');
-    form.keepExtensions = true;
+    // Parse multipart form data manually since we can't use formidable in serverless
+    const contentType = req.headers['content-type'] || '';
     
-    // Ensure upload directory exists
-    if (!fs.existsSync(form.uploadDir)) {
-      fs.mkdirSync(form.uploadDir, { recursive: true });
+    if (!contentType.includes('multipart/form-data')) {
+      return res.status(400).json({ error: 'Content-Type must be multipart/form-data' });
     }
 
-    form.parse(req, async (err, fields, files) => {
-      if (err) {
-        return res.status(400).json({ error: 'File upload error: ' + err.message });
-      }
+    // Get the raw body
+    const chunks = [];
+    for await (const chunk of req) {
+      chunks.push(chunk);
+    }
+    const buffer = Buffer.concat(chunks);
 
-      const { password, title, description } = fields;
-      
-      if (password !== ADMIN_PASSWORD) {
-        return res.status(401).json({ error: 'Invalid password' });
-      }
+    // Parse multipart data
+    const boundary = contentType.split('boundary=')[1];
+    const parts = parseMultipartData(buffer, boundary);
+    
+    const password = parts.password;
+    const title = parts.title;
+    const description = parts.description;
+    const fileData = parts.file;
 
-      if (!files.file) {
-        return res.status(400).json({ error: 'No file uploaded' });
-      }
+    if (password !== ADMIN_PASSWORD) {
+      return res.status(401).json({ error: 'Invalid password' });
+    }
 
-      const file = files.file;
-      const originalName = file.originalFilename || file.name;
-      const timestamp = Date.now();
-      const safeName = originalName
-        .replace(/\s+/g, '-')
-        .replace(/[^a-zA-Z0-9.-]/g, '');
-      const newFilename = `${timestamp}-${safeName}`;
-      
-      // Move file to final location
-      const finalPath = path.join(form.uploadDir, newFilename);
-      fs.renameSync(file.filepath, finalPath);
+    if (!fileData) {
+      return res.status(400).json({ error: 'No file uploaded' });
+    }
 
-      const metadataFile = path.join(process.cwd(), 'public', 'data.json');
-      let data = [];
+    const timestamp = Date.now();
+    const originalName = fileData.filename || 'document.pdf';
+    const safeName = originalName
+      .replace(/\s+/g, '-')
+      .replace(/[^a-zA-Z0-9.-]/g, '');
+    const newFilename = `${timestamp}-${safeName}`;
 
-      if (fs.existsSync(metadataFile)) {
-        data = JSON.parse(fs.readFileSync(metadataFile));
-      }
+    // Convert file to base64 for storage
+    const base64Data = fileData.data.toString('base64');
 
-      const newEntry = {
-        id: timestamp.toString(),
-        title,
-        description,
-        filename: newFilename,
-        originalName,
-        uploadedAt: new Date().toISOString(),
-      };
+    const newEntry = {
+      id: timestamp.toString(),
+      title,
+      description,
+      filename: newFilename,
+      originalName,
+      uploadedAt: new Date().toISOString(),
+      fileData: base64Data, // Store file as base64
+      fileSize: fileData.data.length
+    };
 
-      data.push(newEntry);
-      fs.writeFileSync(metadataFile, JSON.stringify(data, null, 2));
-
-      return res.json({ message: 'Upload successful', entry: newEntry });
+    // In a real application, you would store this in a database
+    // For now, we'll return the data to the client to store
+    return res.json({ 
+      message: 'Upload successful', 
+      entry: newEntry,
+      note: 'File data returned as base64. Store this data in your preferred storage solution.'
     });
+
   } catch (error) {
     console.error('Upload error:', error);
-    return res.status(500).json({ error: 'Internal server error' });
+    return res.status(500).json({ error: 'Internal server error: ' + error.message });
   }
+}
+
+// Helper function to parse multipart form data
+function parseMultipartData(buffer, boundary) {
+  const parts = {};
+  const boundaryBuffer = Buffer.from(`--${boundary}`);
+  const endBoundaryBuffer = Buffer.from(`--${boundary}--`);
+  
+  let start = buffer.indexOf(boundaryBuffer) + boundaryBuffer.length;
+  
+  while (start < buffer.length) {
+    // Find the end of this part
+    const end = buffer.indexOf(boundaryBuffer, start);
+    if (end === -1) break;
+    
+    const partBuffer = buffer.slice(start, end);
+    
+    // Find the header/body separator
+    const headerEnd = partBuffer.indexOf('\r\n\r\n');
+    if (headerEnd === -1) {
+      start = end + boundaryBuffer.length;
+      continue;
+    }
+    
+    const headers = partBuffer.slice(0, headerEnd).toString();
+    const body = partBuffer.slice(headerEnd + 4);
+    
+    // Parse headers to find name and filename
+    const nameMatch = headers.match(/name="([^"]+)"/);
+    const filenameMatch = headers.match(/filename="([^"]+)"/);
+    
+    if (nameMatch) {
+      const name = nameMatch[1];
+      if (filenameMatch) {
+        // This is a file
+        parts[name] = {
+          filename: filenameMatch[1],
+          data: body.slice(0, -2) // Remove trailing \r\n
+        };
+      } else {
+        // This is a regular field
+        parts[name] = body.slice(0, -2).toString(); // Remove trailing \r\n
+      }
+    }
+    
+    start = end + boundaryBuffer.length;
+  }
+  
+  return parts;
 }
 
 export const config = {

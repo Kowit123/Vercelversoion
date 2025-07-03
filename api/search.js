@@ -17,24 +17,16 @@ export default async function handler(req, res) {
 
   try {
     const { keyword } = req.body;
-    const metadataFile = path.join(process.cwd(), 'public', 'data.json');
-
-    if (!fs.existsSync(metadataFile)) {
-      return res.json([]);
-    }
-
-    const data = JSON.parse(fs.readFileSync(metadataFile));
-    const results = data.filter((item) => {
-      const lower = keyword.toLowerCase();
-      return (
-        item.title.toLowerCase().includes(lower) ||
-        (item.description && item.description.toLowerCase().includes(lower))
-      );
+    
+    // Since documents are stored locally in the browser,
+    // search should be performed client-side
+    return res.json({ 
+      message: 'Search should be performed client-side',
+      note: 'Documents are stored in browser localStorage. Use client-side search functionality.',
+      keyword: keyword
     });
-
-    return res.json(results);
   } catch (error) {
     console.error('Search error:', error);
-    return res.status(500).json({ error: 'Internal server error' });
+    return res.status(500).json({ error: 'Internal server error: ' + error.message });
   }
 } 
