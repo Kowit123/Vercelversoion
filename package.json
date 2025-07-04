@@ -9,6 +9,7 @@
     "start": "vercel dev"
   },
   "dependencies": {
+    "@supabase/supabase-js": "^2.50.3",
     "@vercel/blob": "^1.1.1",
     "better-sqlite3": "^12.2.0",
     "dotenv": "^17.0.1",

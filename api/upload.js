@@ -1,86 +1,57 @@
-const express = require('express');
-const multer = require('multer');
-const fs = require('fs');
-const path = require('path');
-const { put } = require('@vercel/blob');
-const Database = require('better-sqlite3');
-require('dotenv').config();
+import { write } from '@vercel/blob';
+import { supabase } from '../lib/supabaseClient.js';
+import formidable from 'formidable';
+import fs from 'fs/promises';
 
-const router = express.Router();
+export const config = {
+  api: {
+    bodyParser: false, // ใช้กับ formidable เพื่อรับ multipart/form-data
+  },
+};
 
-// สร้างโฟลเดอร์ temp ถ้ายังไม่มี
-if (!fs.existsSync('temp')) {
-  fs.mkdirSync('temp');
-}
+const ADMIN_PASSWORD = process.env.UPLOAD_PASSWORD;
 
-// ตั้งค่า multer ให้เก็บไฟล์ไว้ชั่วคราว
-const upload = multer({ dest: 'temp/' });
+export default async function handler(req, res) {
+  if (req.method !== 'POST') return res.status(405).json({ error: 'Method not allowed' });
 
-// เปิด SQLite
-const db = new Database(path.join(__dirname, '../files.db'));
-
-// สร้างตารางถ้ายังไม่มี
-db.exec(`
-  CREATE TABLE IF NOT EXISTS files (
-    id INTEGER PRIMARY KEY AUTOINCREMENT,
-    title TEXT NOT NULL,
-    description TEXT,
-    blobUrl TEXT NOT NULL,
-    created_at DATETIME DEFAULT CURRENT_TIMESTAMP
-  )
-`);
-
-// Route รับ POST /api/upload
-router.post('/', upload.single('file'), async (req, res) => {
   try {
-    const { password, title, description } = req.body;
-    const file = req.file;
+    const form = formidable({ multiples: false });
+    const [fields, files] = await form.parse(req);
 
-    console.log("📥 password ที่ส่งมา:", password);
-    console.log("🔐 password ที่อยู่ใน env:", process.env.UPLOAD_PASSWORD);
+    const { password, title, description } = fields;
+    const pdfFile = files.file;
 
-
-    console.log("🧪 req.body:", req.body);
-    console.log("📎 req.file:", req.file);
-
-    if (!file || !title || !password) {
-      return res.status(400).json({ error: 'Missing required fields' });
+    if (password !== ADMIN_PASSWORD) {
+      return res.status(401).json({ error: 'Invalid password' });
     }
 
-    // เช็ก password
-    if (password !== process.env.UPLOAD_PASSWORD) {
-      return res.status(403).json({ error: 'Invalid password' });
-    }
+    const pdfBuffer = await fs.readFile(pdfFile[0].filepath);
 
-    // อัปโหลดไปยัง Vercel Blob
-    const filename = `${Date.now()}-${file.originalname}`;
-    const blob = await put(filename, fs.readFileSync(file.path), {
+    // 👑 ตั้งชื่อให้ไฟล์
+    const fileName = `${Date.now()}-${encodeURIComponent(pdfFile[0].originalFilename)}`;
+
+    // ⬆️ อัปโหลดขึ้น Vercel Blob
+    const blob = await write(fileName, pdfBuffer, {
       access: 'public',
-      token: process.env.BLOB_READ_WRITE_TOKEN,
     });
 
-    // บันทึกลง SQLite
-    const stmt = db.prepare('INSERT INTO files (title, description, blobUrl) VALUES (?, ?, ?)');
-    const info = stmt.run(title, description, blob.url);
-
-    // ลบไฟล์ temp
-    fs.unlinkSync(file.path);
-
-    // ตอบกลับ
-    res.json({
-      message: 'Upload successful',
-      entry: {
-        id: info.lastInsertRowid,
+    // 📝 บันทึกข้อมูลลง Supabase
+    const { error } = await supabase.from('files').insert([
+      {
         title,
         description,
-        blobUrl: blob.url,
+        blob_url: blob.url,
       },
-    });
+    ]);
 
+    if (error) {
+      console.error('Supabase insert error:', error);
+      return res.status(500).json({ error: 'Failed to insert to Supabase' });
+    }
+
+    return res.status(200).json({ message: 'Upload complete!', url: blob.url });
   } catch (err) {
-    console.error('🔥 Upload error:', err);
-    res.status(500).json({ error: 'Upload failed', detail: err.message });
+    console.error('Upload error:', err);
+    return res.status(500).json({ error: 'Upload failed' });
   }
-});
-
-module.exports = router;
+}
